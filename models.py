@@ -20,11 +20,11 @@ class User(db.Model):
     password = db.Column(db.String,
                     nullable = False)
     favorite_cocktails_id = db.Column(db.Integer,
-                    ForeignKey('cocktail.id'))
+                    ForeignKey('cocktails.id'))
     
     @classmethod
     def register(cls, username, password):
-        """Register your username and password"""]
+        """Register your username and password"""
         hashed_pw = bcrypt.generate_password_hash(password).decode('UTF-8')
 
         user = User(
@@ -45,7 +45,7 @@ class User(db.Model):
             if is_auth:
                 return user
         
-        return false
+        return False
 
 class Cocktail(db.Model):
     """The cocktail class"""
@@ -54,3 +54,12 @@ class Cocktail(db.Model):
 
     id = db.Column(db.Integer,
                     primary_key = True)
+    name = db.Column(db.String)
+    
+    # more information? 
+
+def connect_db(app):
+    """connect this database to the flask app."""
+
+    db.app = app
+    db.init_app(app)

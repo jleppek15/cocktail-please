@@ -1,3 +1,17 @@
 {% extends 'base.html'%}
 
 {%block title%} Home Page {%endblock%}
+
+{%block content%}
+
+<div class="p-5 mb-4 rounded-3">
+    <div class="container-fluid py-5">
+        <h1 class="display-5 fw-bold">Welcome to "Cocktail, please!"</h1>
+        <p class="col-md-8 fs-4">You look like you could use a cocktail, girl. Hit the 'cocktail, please!' button below to get started on your magical alcohol journey. Or, if you're feeling less chaotic, look up a cocktail by name or ingredient. And now you can create an account to save your favorite cocktails!</p>
+        <form action="/random">
+            <button type="submit" class="btn btn-primary btn-lg">COCKTAIL, PLEASE</button>
+        </form>
+    </div>
+</div>
+
+{%endblock%}

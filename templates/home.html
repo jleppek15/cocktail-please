@@ -1,6 +1,6 @@
 {% extends 'base.html'%}
 
-{%block title%} Home Page {%endblock%}
+{%block title%} Cocktail, please! {%endblock%}
 
 {%block content%}
 
@@ -9,9 +9,30 @@
         <h1 class="display-5 fw-bold">Welcome to "Cocktail, please!"</h1>
         <p class="col-md-8 fs-4">You look like you could use a cocktail, girl. Hit the 'cocktail, please!' button below to get started on your magical alcohol journey. Or, if you're feeling less chaotic, look up a cocktail by name or ingredient. And now you can create an account to save your favorite cocktails!</p>
         <form action="/random">
-            <button type="submit" class="btn btn-primary btn-lg">COCKTAIL, PLEASE</button>
+            <button type="submit" class="btn btn-info btn-lg">Cocktail, please!</button>
         </form>
     </div>
 </div>
+
+<div class="row">
+    <div class="col-sm-6 m-1">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Search by Ingredient</h5>
+          <p class="card-text">Got something in the cabinet but no cocktail knowledge? Look it up by ingredient</p>
+          <a href="#" class="btn btn-primary">Search by Ingredient</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 m-1">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Search by Name</h5>
+          <p class="card-text">You know your cocktail names but not how to make them? Look it up by name.</p>
+          <a href="#" class="btn btn-primary">Search by Name</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
 {%endblock%}

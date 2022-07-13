@@ -1,0 +1,39 @@
+{% extends 'base.html'%}
+
+{%block title%} Your Cocktail {%endblock%}
+
+{%block content%}
+
+<div class="card mb-3">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src="{{random.strDrinkThumb}}" class="card-img justify-content-center" alt="...">
+        </div>
+    <div class="col-md-8">
+        <div class="card-body">
+            <h5 class="card-title">{{random.strDrink}}</h5>
+                <p class="card-text">{{random.strCategory}}</p>
+                    <p class="card-text">Ingredients:
+                        <ul>
+                            {%for i in ingredients %}
+                            <li>{{i}}</li>
+                            {%endfor%}
+                        </ul>
+                
+                        Instructions:
+                        {{random.strInstructions}}
+            </p>
+        </p>
+        {%if not g.user %}
+        <p class="card=text"><small class="text-muted">Login to Favorite Cocktails.</small></p>
+        {% else %}
+        <form class="d-flex" action="/favorite">
+            <button class="btn btn-outline-success" type="submit">Favorite this cocktail</button>
+        </form>
+        {%endif%}
+            </div>
+        </div>
+    </div>
+  </div>
+
+{%endblock%}

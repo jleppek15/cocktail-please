@@ -1,3 +1,5 @@
+import os
+
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import ForeignKey
 
@@ -25,11 +27,12 @@ class User(db.Model):
     @classmethod
     def register(cls, username, password):
         """Register your username and password"""
+
         hashed_pw = bcrypt.generate_password_hash(password).decode('UTF-8')
 
         user = User(
             username=username,
-            password=hashed_pw
+            password=hashed_pw,
         )
 
         db.session.add(user)

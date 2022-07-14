@@ -27,7 +27,7 @@
         {%if not g.user %}
         <p class="card=text"><small class="text-muted">Login to Favorite Cocktails.</small></p>
         {% else %}
-        <form class="d-flex" action="/favorite">
+        <form class="d-flex" action="/favorite/{{random.idDrink}}" method="post">
             <button class="btn btn-outline-success" type="submit">Favorite this cocktail</button>
         </form>
         {%endif%}

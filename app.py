@@ -25,7 +25,11 @@ URL = 'http://www.thecocktaildb.com/api/json/v1/1/'
 @app.before_request
 def check_user():
     """Check to see if we are logged in and add user to flask g"""
-
+    if CURR_USER_KEY in session:
+        g.user = User.query.get(session[CURR_USER_KEY])
+    
+    else:
+        g.user = None
 
 def login(user):
     """login a user"""
@@ -92,7 +96,7 @@ def register_user():
     else:
         return render_template('/users/register.html', form = form)
 
-@app.route('/logout', methods=["POST"])
+@app.route('/logout')
 def logout_user():
     """logout current user"""
     logout()
@@ -120,9 +124,30 @@ def condense_ingredients(obj):
     return ingredients;
 
 
-@app.route('/favorite', methods=["POST"])
-def favorite_cocktail():
+@app.route('/favorite/<int:idDrink>', methods=["POST"])
+def favorite_cocktail(idDrink):
     """Add the cocktail to the database and to the User"""
+    cocktail = requests.get(URL + f'lookup.php?i={idDrink}').json()
+    favorite_cocktail = cocktail['drinks']
+    fct = favorite_cocktail[0]
+    print(fct)
+    new_favorite_cocktail = Cocktail(id=idDrink, name=fct['strDrink'])
+    db.session.add(new_favorite_cocktail)
+    
+    user_favorite = g.user.favorite_cocktails_id
+
+    if user_favorite:
+        if idDrink in user_favorite:
+            g.user.favorite_cocktails_id = [favorite for favorite in user_favorite if favorite != idDrink]
+        else:
+            user_favorite.append(idDrink)
+    else:
+        user_favorite.append(idDrink)
+
+    db.session.commit()
+
+    return redirect(request.url)
+
 
 @app.route('/search/ingredient', methods=["POST", "GET"])
 def search_cocktail():

@@ -24,24 +24,24 @@
 
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              requests
+              search cocktails
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="/search/ingredient">Search by Ingredient</a></li>
               <li><a class="dropdown-item" href="/search/name">Search by Name</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="/favorites">My Favorites</a></li>
             </ul>
           </li>
+          {% if g.user %}
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="/favorite">favorites</a>
+            </li>
+          {%endif%}
         </ul>
         {%if not g.user %}
         <form class="d-flex" action="/login">
           <button class="btn btn-outline-info" type="submit">Register or Login</button>
         </form>
         {% else %}
-        <form class="d-flex" action="/favorites">
-          <button class="btn btn-outline-success" type="submit">Favorite Cocktails</button>
-        </form>
         <form class="d-flex" action="/logout">
             <button class="btn btn-outline-success" type="submit">Logout</button>
         </form>

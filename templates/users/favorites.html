@@ -1,0 +1,17 @@
+{% extends 'base.html'%}
+
+{%block title%} Favorites {%endblock%}
+
+{%block content%}
+
+<h1>Your Favorites:</h1>
+
+{%for cocktail in favorite_cocktails %}
+
+<form action="/cocktail/{{cocktail.api_id}}">
+    <button type="submit">{{cocktail.name}}</button>
+</form>
+
+{%endfor%}
+
+{%endblock%}

@@ -1,3 +1,4 @@
+from enum import auto
 import os
 
 from flask_sqlalchemy import SQLAlchemy
@@ -11,18 +12,20 @@ db = SQLAlchemy()
 class User(db.Model):
     """The main user class"""
 
-    __tablename__ = "users"
+    __tablename__ = 'users'
 
     id = db.Column(db.Integer,
                     primary_key = True,
                     autoincrement = True)
+
     username = db.Column(db.String,
                     nullable = False,
                     unique = True)
+
     password = db.Column(db.String,
                     nullable = False)
-    favorite_cocktails_id = db.Column(db.Integer,
-                    ForeignKey('cocktails.id'))
+
+    favorite_cocktails = db.relationship('Cocktail', secondary='favorites', backref='users')
     
     @classmethod
     def register(cls, username, password):
@@ -53,13 +56,48 @@ class User(db.Model):
 class Cocktail(db.Model):
     """The cocktail class"""
 
-    __tablename__ = "cocktails"
+    __tablename__ = 'cocktails'
 
-    id = db.Column(db.Integer,
-                    primary_key = True)
-    name = db.Column(db.String)
+    api_id = db.Column(db.Integer,
+                    primary_key = True,
+                    nullable = False)
+
+    name = db.Column(db.Text,
+                    nullable=False)
+
+    favorite_users = db.relationship('User', secondary='favorites', backref='cocktails')
+
+    @classmethod
+    def add_cocktail(cls, api_id, name):
+        cocktail = Cocktail(
+            api_id = api_id,
+            name = name,
+        )
+        db.session.add(cocktail)
+        return cocktail
     
     # more information? 
+
+
+class Favorites(db.Model):
+    """User and cocktail ids"""
+    
+    __tablename__ = 'favorites'
+    
+    id = db.Column(db.Integer,
+                    autoincrement=True,
+                    primary_key = True)
+
+    user_id = db.Column(db.Integer,
+                    db.ForeignKey('users.id', 
+                    ondelete="cascade"))
+
+    cocktail_id = db.Column(db.Integer,
+                    db.ForeignKey('cocktails.api_id', 
+                    ondelete="cascade"))
+    
+
+
 
 def connect_db(app):
     """connect this database to the flask app."""

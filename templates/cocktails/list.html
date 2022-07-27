@@ -1,0 +1,17 @@
+{%extends 'base.html'%}
+
+{%block title%} Cocktail List {%endblock%}
+
+{%block content%}
+
+<h1>Results:</h1>
+
+{%for cocktail in cocktails%}
+
+<form action="/cocktail/{{cocktail.idDrink}}">
+    <button type="submit">{{cocktail.strDrink}}</button>
+</form>
+
+{%endfor%}
+
+{%endblock%}

@@ -5,8 +5,8 @@ import itertools
 from sqlalchemy.exc import IntegrityError
 import json
 
-from models import db, connect_db, User, Cocktail
-from forms import RegisterUserForm
+from models import db, connect_db, User, Cocktail, Favorites
+from forms import RegisterUserForm, SearchForm
 
 CURR_USER_KEY = "curr_user"
 
@@ -102,6 +102,13 @@ def logout_user():
     logout()
     return render_template('home.html')
 
+@app.route('/favorites')
+def show_favorites():
+    favorite_cocktails = g.user.favorite_cocktails
+    print(favorite_cocktails)
+    return render_template('users/favorites.html', favorite_cocktails = favorite_cocktails)
+
+
 #_______COCKTAIL API METHODS GO BELOW_______#
 
 @app.route('/random', methods=['GET'])
@@ -110,7 +117,7 @@ def random_cocktail():
     random = requests.get(URL + 'random.php').json()
     random_cocktail = random['drinks']
     ingredients = condense_ingredients(random_cocktail[0])
-    return render_template('/cocktails/random.html', random=random_cocktail[0], ingredients = ingredients)
+    return render_template('/cocktails/coktail.html', random=random_cocktail[0], ingredients = ingredients)
 
 def condense_ingredients(obj):
     """A method to condense ingredients to be readable"""
@@ -123,6 +130,14 @@ def condense_ingredients(obj):
             ingredients.append(ingredient)
     return ingredients;
 
+@app.route('/cocktail/<int:idDrink>', methods=["GET"])
+def show_cocktail_id(idDrink):
+    """show a cocktail by its API_id"""
+    cocktail = requests.get(URL + f'lookup.php?i={idDrink}').json()
+    cocktail_data = cocktail['drinks']
+    ingredients = condense_ingredients(cocktail_data[0])
+    return render_template('cocktails/cocktail.html', random = cocktail_data[0], ingredients = ingredients)
+
 
 @app.route('/favorite/<int:idDrink>', methods=["POST"])
 def favorite_cocktail(idDrink):
@@ -130,30 +145,49 @@ def favorite_cocktail(idDrink):
     cocktail = requests.get(URL + f'lookup.php?i={idDrink}').json()
     favorite_cocktail = cocktail['drinks']
     fct = favorite_cocktail[0]
-    print(fct)
-    new_favorite_cocktail = Cocktail(id=idDrink, name=fct['strDrink'])
-    db.session.add(new_favorite_cocktail)
     
-    user_favorite = g.user.favorite_cocktails_id
+    new_favorite_cocktail = Cocktail.add_cocktail(api_id=idDrink, name=fct['strDrink'])
+    
+    user_favorite = g.user.favorite_cocktails
 
-    if user_favorite:
-        if idDrink in user_favorite:
-            g.user.favorite_cocktails_id = [favorite for favorite in user_favorite if favorite != idDrink]
-        else:
-            user_favorite.append(idDrink)
+    if idDrink in user_favorite:
+        g.user.favorite_cocktails = [favorite for favorite in user_favorite if favorite != idDrink]
     else:
-        user_favorite.append(idDrink)
+        g.user.favorite_cocktails.append(new_favorite_cocktail)
 
     db.session.commit()
 
-    return redirect(request.url)
+    return redirect('/favorites')
 
 
-@app.route('/search/ingredient', methods=["POST", "GET"])
-def search_cocktail():
+@app.route('/search/ingredient', methods=['POST'])
+def search():
+    form = SearchForm()
+    if form.validate_on_submit():
+        return redirect('/search_results/ingredient', query = form.search.data)
+    return render_template('/search/ingredient.html', form = form)
+
+
+@app.route('/search/name', methods=['POST', 'GET'])
+def search():
+    form = SearchForm()
+    if form.validate_on_submit():
+        return redirect('/search_results/name', query = form.search.data)
+    return render_template('/search/name.html', form = form)
+
+@app.route('/search_results/ingredient/<query>', methods=["POST"])
+def search_cocktail(query):
     """search the cocktail API by ingredients, using a drop down menu"""
-    ingredient = request.args
+    ingredient = query
+    cocktails = requests.get(URL + f'filter.php?i={ingredient}')
+    cocktail_data = cocktails['drinks']
+    return render_template('cocktails/list.html', list = cocktail_data)
 
-@app.route('/search/name', methods=["GET", "POST"])
-def search_ingredient():
+@app.route('/search_results/name/<query>', methods=["GET"])
+def search_ingredient(query):
     """search the cocktail API by name"""
+    name = query
+    cocktail = requests.get(URL + f'search.php?i={name}').json()
+    cocktail_data = cocktail['drinks']
+    ingredients = condense_ingredients(cocktail_data[0])
+    return render_template('cocktails/cocktail.html', random = cocktail_data[0], ingredients = ingredients)

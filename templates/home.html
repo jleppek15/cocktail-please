@@ -15,21 +15,25 @@
 </div>
 
 <div class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-4 m-2">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Search by Ingredient</h5>
           <p class="card-text">Got something in the cabinet but no cocktail knowledge? Look it up by ingredient</p>
-          <a href="#" class="btn btn-info">Search by Ingredient</a>
+          <form action = '/search/ingredient'>
+          <button type="submit" class="btn btn-info">Search by Ingredient</button>
+          </form>
         </div>
       </div>
     </div>
-    <div class="col-sm-4">
+    <div class="col-sm-4 m-2">
       <div class="card">
         <div class="card-body">
           <h5 class="card-title">Search by Name</h5>
           <p class="card-text">You know your cocktail names but not how to make them? Look it up by name.</p>
-          <a href="#" class="btn btn-info">Search by Name</a>
+          <form action="/search/name">
+          <button type="submit" class="btn btn-info">Search by Name</button>
+          </form>
         </div>
       </div>
     </div>

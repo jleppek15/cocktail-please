@@ -117,7 +117,7 @@ def random_cocktail():
     random = requests.get(URL + 'random.php').json()
     random_cocktail = random['drinks']
     ingredients = condense_ingredients(random_cocktail[0])
-    return render_template('/cocktails/coktail.html', random=random_cocktail[0], ingredients = ingredients)
+    return render_template('/cocktails/cocktail.html', random=random_cocktail[0], ingredients = ingredients)
 
 def condense_ingredients(obj):
     """A method to condense ingredients to be readable"""
@@ -160,34 +160,40 @@ def favorite_cocktail(idDrink):
     return redirect('/favorites')
 
 
-@app.route('/search/ingredient', methods=['POST'])
-def search():
+@app.route('/search/ingredient', methods=['POST', 'GET'])
+def search_ingredient():
     form = SearchForm()
     if form.validate_on_submit():
-        return redirect('/search_results/ingredient', query = form.search.data)
+        return redirect(f'/search_results/ingredient/{form.search.data}')
     return render_template('/search/ingredient.html', form = form)
 
 
 @app.route('/search/name', methods=['POST', 'GET'])
-def search():
+def search_name():
     form = SearchForm()
     if form.validate_on_submit():
-        return redirect('/search_results/name', query = form.search.data)
+        return redirect(f'/search_results/name/{form.search.data}')
+
     return render_template('/search/name.html', form = form)
 
-@app.route('/search_results/ingredient/<query>', methods=["POST"])
-def search_cocktail(query):
-    """search the cocktail API by ingredients, using a drop down menu"""
+@app.route('/search_results/ingredient/<query>', methods=["GET"])
+def search_results_ingredient(query):
+    """search the cocktail API by ingredients, using a query"""
     ingredient = query
-    cocktails = requests.get(URL + f'filter.php?i={ingredient}')
-    cocktail_data = cocktails['drinks']
+    cocktails = requests.get(URL + f'filter.php?i={ingredient}').json()
+    if cocktails['drinks']:
+        cocktail_data = cocktails['drinks']
+        return render_template('cocktails/list.html', list=cocktail_data)
     return render_template('cocktails/list.html', list = cocktail_data)
 
 @app.route('/search_results/name/<query>', methods=["GET"])
-def search_ingredient(query):
+def search_results_name(query):
     """search the cocktail API by name"""
     name = query
-    cocktail = requests.get(URL + f'search.php?i={name}').json()
-    cocktail_data = cocktail['drinks']
-    ingredients = condense_ingredients(cocktail_data[0])
-    return render_template('cocktails/cocktail.html', random = cocktail_data[0], ingredients = ingredients)
+    cocktail = requests.get(URL + f'search.php?s={name}').json()
+    if cocktail['drinks']:
+        cocktail_data = cocktail['drinks']
+        ingredients = condense_ingredients(cocktail_data[0])
+        return render_template('cocktails/cocktail.html', random = cocktail_data[0], ingredients = ingredients)
+    else:
+        return render_template('404.html')

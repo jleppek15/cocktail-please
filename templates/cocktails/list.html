@@ -6,7 +6,7 @@
 
 <h1>Results:</h1>
 
-{%for cocktail in cocktails%}
+{%for cocktail in list%}
 
 <form action="/cocktail/{{cocktail.idDrink}}">
     <button type="submit">{{cocktail.strDrink}}</button>

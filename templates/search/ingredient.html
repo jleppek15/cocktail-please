@@ -4,7 +4,7 @@
 
 {%block content%}
 
-<form method="GET" id="query">
+<form method="POST" action="/search/ingredient">
     {{ form.hidden_tag() }}
 
     {% for field in form if field.widget.input_type != 'hidden' %}
@@ -14,6 +14,6 @@
       {{ field(placeholder=field.label.text, class="form-control") }}
     {% endfor %}
 
-    <button class="btn btn-primary btn-block btn-md">Search</button>
+    </form>
 
 {%endblock%}

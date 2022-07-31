@@ -6,7 +6,7 @@ from sqlalchemy.exc import IntegrityError
 import json
 
 from models import db, connect_db, User, Cocktail, Favorites
-from forms import RegisterUserForm, SearchForm
+from forms import RegisterUserForm, SearchForm, SignInForm
 
 CURR_USER_KEY = "curr_user"
 
@@ -56,7 +56,7 @@ def show_home():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
-    form = RegisterUserForm()
+    form = SignInForm()
 
     if form.validate_on_submit():
         user = User.authenticate(form.username.data,
@@ -82,6 +82,7 @@ def register_user():
             user = User.register(
                 username = form.username.data,
                 password = form.password.data,
+                email = form.email.data
             )
             db.session.commit()
     
@@ -104,9 +105,39 @@ def logout_user():
 
 @app.route('/favorites')
 def show_favorites():
+    """show all user favorites"""
+    user = g.user
     favorite_cocktails = g.user.favorite_cocktails
     print(favorite_cocktails)
-    return render_template('users/favorites.html', favorite_cocktails = favorite_cocktails)
+    return render_template('users/favorites.html', favorite_cocktails = favorite_cocktails, user = user)
+
+@app.route('/user/profile-edit', methods=['GET', 'POST'])
+def edit_user():
+    user = g.user
+    form = RegisterUserForm(obj=user)
+    if form.validate_on_submit():
+        if User.authenticate(g.user.username,form.password.data):
+            flash("Success! Profile edited.", "success")
+            user.username = form.username.data
+            user.email = form.email.data
+
+            db.session.add(user)
+            db.session.commit()
+            return redirect(f'/favorites')
+        else:
+            flash("Password was incorrect, try again!", "danger")
+
+    return render_template("users/profile-edit.html", user=user, form=form)
+
+@app.route('/user/delete', methods=['GET','POST'])
+def delete_user():
+    """Delete user"""
+    user = g.user
+    logout()
+    db.session.delete(user)
+    db.session.commit()
+    flash("Your account has been deleted!", "danger")
+    return redirect('/')
 
 
 #_______COCKTAIL API METHODS GO BELOW_______#
@@ -162,6 +193,7 @@ def favorite_cocktail(idDrink):
 
 @app.route('/search/ingredient', methods=['POST', 'GET'])
 def search_ingredient():
+    """function for searching by ingredient"""
     form = SearchForm()
     if form.validate_on_submit():
         return redirect(f'/search_results/ingredient/{form.search.data}')
@@ -170,6 +202,7 @@ def search_ingredient():
 
 @app.route('/search/name', methods=['POST', 'GET'])
 def search_name():
+    """function for searching by name of cocktail"""
     form = SearchForm()
     if form.validate_on_submit():
         return redirect(f'/search_results/name/{form.search.data}')

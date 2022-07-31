@@ -3,15 +3,36 @@
 {%block title%} Favorites {%endblock%}
 
 {%block content%}
-
-<h1>Your Favorites:</h1>
-
-{%for cocktail in favorite_cocktails %}
-
-<form action="/cocktail/{{cocktail.api_id}}">
-    <button type="submit">{{cocktail.name}}</button>
-</form>
-
-{%endfor%}
+<div class="row">
+<div class="card col-4">
+    <div class="card-header">
+        {{user.username}}
+    </div>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+            {{user.email}}
+        </li>
+        <li class="list-group-item">
+            <form method="get" action="user/profile-edit">
+            <button type="submit">Edit User</button>
+            </form>
+        </li>
+    </ul>
+</div>
+<div class="card col-5" style="width: 18rem;">
+    <div class="card-header">
+      Favorites
+    </div>
+    <ul class="list-group list-group-flush">
+        {%for cocktail in favorite_cocktails %}
+    <li class="list-group-item">
+        <form action="/cocktail/{{cocktail.api_id}}">
+        <button type="submit">{{cocktail.name}}</button>
+        </form>
+        </li>
+        {%endfor%}
+    </ul>
+  </div>
+  </div>
 
 {%endblock%}

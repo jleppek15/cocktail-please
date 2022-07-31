@@ -8,6 +8,12 @@ class RegisterUserForm(FlaskForm):
     """form for registering a user"""
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[Length(min=6)])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+
+class SignInForm(FlaskForm):
+    """form for signing up"""
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
 
 class SearchForm(FlaskForm):
     """form for searching the cocktail API"""

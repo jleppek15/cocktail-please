@@ -33,17 +33,17 @@
           </li>
           {% if g.user %}
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/favorites">User Profile</a>
+              <a class="nav-link active" aria-current="page" href="/favorites">user profile</a>
             </li>
           {%endif%}
         </ul>
         {%if not g.user %}
         <form class="d-flex" action="/login">
-          <button class="btn btn-outline-info" type="submit">Register or Login</button>
+          <button class="btn btn-outline-info" type="submit">register or login</button>
         </form>
         {% else %}
         <form class="d-flex" action="/logout">
-            <button class="btn btn-outline-success" type="submit">Logout</button>
+            <button class="btn btn-outline-success" type="submit">logout</button>
         </form>
         {%endif%}
 

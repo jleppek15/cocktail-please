@@ -24,11 +24,14 @@ class User(db.Model):
 
     password = db.Column(db.String,
                     nullable = False)
+    
+    email = db.Column(db.String,
+                    nullable = True)
 
     favorite_cocktails = db.relationship('Cocktail', secondary='favorites', backref='users')
     
     @classmethod
-    def register(cls, username, password):
+    def register(cls, username, password, email):
         """Register your username and password"""
 
         hashed_pw = bcrypt.generate_password_hash(password).decode('UTF-8')
@@ -36,6 +39,7 @@ class User(db.Model):
         user = User(
             username=username,
             password=hashed_pw,
+            email=email,
         )
 
         db.session.add(user)

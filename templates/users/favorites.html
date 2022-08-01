@@ -3,9 +3,9 @@
 {%block title%} Favorites {%endblock%}
 
 {%block content%}
-<div class="row">
-<div class="card col-4">
-    <div class="card-header">
+<br>
+<div class="card m-3" style="width: 18rem;">
+    <div class="card-header bg-light">
         {{user.username}}
     </div>
     <ul class="list-group list-group-flush">
@@ -14,20 +14,21 @@
         </li>
         <li class="list-group-item">
             <form method="get" action="user/profile-edit">
-            <button type="submit">Edit User</button>
+            <button type="submit" class="btn btn-outline-dark">Edit User</button>
             </form>
         </li>
     </ul>
 </div>
-<div class="card col-5" style="width: 18rem;">
-    <div class="card-header">
+<br>
+<div class="card m-3" style="width: 18rem;">
+    <div class="card-header bg-light">
       Favorites
     </div>
     <ul class="list-group list-group-flush">
         {%for cocktail in favorite_cocktails %}
     <li class="list-group-item">
         <form action="/cocktail/{{cocktail.api_id}}">
-        <button type="submit">{{cocktail.name}}</button>
+        <button type="submit" class="btn btn-outline-dark">{{cocktail.name}}</button>
         </form>
         </li>
         {%endfor%}

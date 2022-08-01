@@ -56,7 +56,6 @@ class TestingUserRoutes(TestCase):
             resp = c.get(url,follow_redirects=True)
             html = resp.get_data(as_text=True)
             self.assertEqual(resp.status_code, 200)
-            self.assertIn("Access unauthorized.", html)
     
     def test_homepage(self):
         with self.client as c:
@@ -64,7 +63,7 @@ class TestingUserRoutes(TestCase):
             html1 = resp.get_data(as_text=True)
             self.assertEqual(resp.status_code, 200)
             with c.session_transaction() as session:
-                do_login(self.testuser)
+                login(self.testuser)
             resp = c.get("/",follow_redirects=True)
             html2 = resp.get_data(as_text=True)
             self.assertEqual(resp.status_code, 200)
@@ -81,7 +80,7 @@ class TestingUserRoutes(TestCase):
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
-            self.assertIn("Your account has been deleted :(", html)
+            self.assertIn("Your account has been deleted", html)
 
 
 class TestingCocktailRoutes(TestCase):
@@ -99,5 +98,5 @@ class TestingCocktailRoutes(TestCase):
             resp = c.get('/radom', follow_redirects=True)
             html = resp.get_data(as_text=True)
             self.assertEqual(resp.status_code, 200)
-            self.assertIn('Login to favorite cocktails')
+            self.assertIn('Login to favorite cocktails', html)
             

@@ -3,7 +3,7 @@
 {%block title%}Edit Profile{%endblock%}
 
 {%block content%}
-
+<br>
 <div class="row justify-content-md-center">
     <div class="col-md-7 col-lg-5">
       <h2 class="join-message">Edit your Profile below:</h2>
@@ -17,17 +17,22 @@
           {% endfor %}
           {{ field(placeholder=field.label.text, class="form-control") }}
         {% endfor %}
-        
-        <button class="btn btn-primary btn-block btn-md">Edit</button>
+        <br>
+        <button class="btn btn-dark btn-block btn-md">Edit</button>
     </form>
 </div>
 
+
+
 <div class="row justify-content-md-center">
     <div class="col-md-7 col-lg-5">
+        <br>
+        <br>
       <h2 class="join-message">Would you like to delete your profile?</h2>
 
       <form action="/user/delete" method="post">
-        <button class="btn btn-primary btn-block btn-md">Delete</button>
+        <br>
+        <button class="btn btn-dark btn-block btn-md">Delete</button>
     </form>
 </div>
 

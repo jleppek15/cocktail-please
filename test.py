@@ -95,7 +95,7 @@ class TestingCocktailRoutes(TestCase):
     
     def test_random_cocktail(self):
         with self.client as c:
-            resp = c.get('/radom', follow_redirects=True)
+            resp = c.get('/random', follow_redirects=True)
             html = resp.get_data(as_text=True)
             self.assertEqual(resp.status_code, 200)
             self.assertIn('Login to favorite cocktails', html)
